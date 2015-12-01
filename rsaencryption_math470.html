@@ -1,0 +1,295 @@
+<html>
+  <head>
+    <title>JavaScript RSA Encryption Demo</title>
+  </head>
+
+  <script language="JavaScript" type="text/javascript">
+
+    // "empty" RSA key constructor
+    function RSAKey() {
+      this.n = null;
+      this.e = 0;
+      this.d = null;
+      this.p = null;
+      this.q = null;
+      this.phin = null;
+      this.dmp1 = null;
+      this.dmq1 = null;
+      this.coeff = null;
+    }
+
+    function RSASetPublic(N,E) {
+      if(N != null && E != null && N.length > 0 && E.length > 0) {
+        this.n = N;
+        this.e = E;
+      }
+      else{
+        alert("Invalid p, q, or e");
+      }
+    }
+
+    // calculates c = m^e mod n
+    function RSADoPublic(x) {
+     // var results = [];
+      var tmp,num;
+      //for(var i=0; i<x.length; i++){
+        tmp = Math.pow(parseInt(x),document.rsatest.e.value);
+        //tmp = Math.pow(parseInt(x[i]),e);
+        num = tmp % document.rsatest.n.value;
+      //  results.push(tmp);
+      //}
+      return num;
+      //return results;
+    }
+
+    // calculates m = c^d mod n
+    function RSADoDecrypt(x) {
+     // var results = [];
+      var tmp,num;
+      //for(var i=0; i<x.length; i++){
+        tmp = Math.pow(parseInt(x),document.rsatest.d.value);
+        //tmp = Math.pow(parseInt(x[i]),e);
+        num = tmp % document.rsatest.n.value;
+      //  results.push(tmp);
+      //}
+      return num;
+      //return results;
+    }
+
+    function numtochar(num){
+      switch(num) {
+        case "01":
+          return 'A';
+        case "02":
+          return 'B';
+        case "03":
+          return 'C';
+        case "04":
+          return 'D';
+        case "05":
+          return 'E';
+        case "06":
+          return 'F';
+        case "07":
+          return 'G';
+        case "08":
+          return 'H';
+        case "09":
+          return 'I';
+        case "10":
+          return 'J';
+        case "11":
+          return 'K';
+        case "12":
+          return 'L';
+        case "13":
+          return 'M';
+        case "14":
+          return 'N';
+        case "15":
+          return 'O';
+        case "16":
+          return 'P';
+        case "17":
+          return 'Q';
+        case "18":
+          return 'R';
+        case "19":
+          return 'S';
+        case "20":
+          return 'T';
+        case "21":
+          return 'U';
+        case "22":
+          return 'V';
+        case "23":
+          return 'W';
+        case "24":
+          return 'X';
+        case "25":
+          return 'Y';
+        case "26":
+          return 'Z';
+        default:
+          return ' ';
+      }
+    }
+
+    function encode(str)
+    {
+       var lett = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+       var out = [];
+       
+       var pad = 1;
+       
+       for (var i = 0; i < str.length; i ++)
+       {
+          c = str.charAt(i);
+          j = lett.indexOf(c.toUpperCase()) + 1;
+          if (j < 10 && pad)
+          {
+             j = "0" + j;
+          }
+          if (j * 1 > 0)
+          {
+             //out[i]=j;
+             out = out + j;
+          }
+          else
+          {
+            if (c.charCodeAt(0) == 10 || c.charCodeAt(0) == 13)
+            {
+              out += c;
+               //out[i] = c;
+            }
+          }
+       }
+
+       return out;
+    }
+
+    function modinv(a,m) {
+      var v = 1;
+      var d = a;
+      var u = (a == 1);
+      var t = 1-u;
+      if (t == 1) {
+          var c = m % a;
+          u = Math.floor(m/a);
+          while (c != 1 && t == 1) {
+                 var q = Math.floor(d/c);
+                 d = d % c;
+                 v = v + q*u;
+                 t = (d != 1);
+                 if (t == 1) {
+                     q = Math.floor(c/d);
+                     c = c % d;
+                     u = u + q*v;
+                 }
+          }
+          u = v*(1 - t) + t*(m - u);
+      }
+      return u;
+  }
+
+    function RSAEncrypt(text) {
+      var m = encode(text);
+      if(m == null) return null;
+      var c = this.doPublic(m);
+      if(c == null) return null;
+      return c;//.toString();
+    }
+
+    function RSADecrypt(text) {
+      var finalm = ""; 
+      var tmp="";
+      var c = document.rsatest.ciphertext.value;
+      var plaintext = document.rsatest.plaintext.value;
+      if(c == null) return null;
+      var m = this.doDecrypt(c);
+      if(m == null) return null;
+      if(plaintext.length % 2 == 1){
+        var tmpplain = "0"+plaintext;
+      }
+      else{
+        tmpplain = plaintext;
+      }
+      for(var i=0;i<plaintext.length;i=i+2){
+        tmp = plaintext.substring(i,i+2);
+        finalm = finalm+numtochar(tmp);
+
+      }
+      return finalm;//.toString();
+    }
+
+    // protected
+    RSAKey.prototype.doPublic = RSADoPublic;
+    RSAKey.prototype.doDecrypt = RSADoDecrypt;
+
+    // public
+    RSAKey.prototype.setPublic = RSASetPublic;
+    RSAKey.prototype.encrypt = RSAEncrypt;
+    RSAKey.prototype.decrypt = RSADecrypt;
+
+
+    function set_ne_default() {
+      document.rsatest.e.value="3";
+      document.rsatest.p.value="9941";
+      document.rsatest.q.value="7937";
+      document.rsatest.n.value = "78901717";
+      document.rsatest.phin.value = "78883840";
+      document.rsatest.d.value = "52589227";
+      //document.rsatest.n.value="502560280658509"; //15485863 * 32452843
+    }
+
+    function set_ne() {
+      this.p = document.rsatest.p.value;
+      this.q = document.rsatest.q.value;
+      this.e = document.rsatest.e.value;
+      this.phin = (parseInt(this.p) - 1)*(parseInt(this.q) - 1);
+      this.d = modinv(parseInt(this.e),parseInt(this.phin));
+      this.n = parseInt(this.p)*parseInt(this.q);
+      document.rsatest.n.value = this.n;
+      document.rsatest.phin.value = this.phin;
+      document.rsatest.d.value = this.d;
+    }
+
+    function do_encrypt() {
+      var rsa = new RSAKey();
+      rsa.setPublic(document.rsatest.n.value, document.rsatest.e.value);
+      var res = rsa.encrypt(document.rsatest.plaintext.value);
+      if(res) {
+        document.rsatest.ciphertext.value = res;
+      }
+    }
+
+    function do_decrypt() {
+      var rsa = new RSAKey();
+      var res = rsa.decrypt(document.rsatest.plaintext.value);
+      if(res) {
+        document.rsatest.decrypttext.value = res;
+      }
+    }
+  </script>
+
+  <body style="font-family: 'Segoe UI'">
+    <h1>RSA Encryption</h1>
+
+    <form name="rsatest" onSubmit='do_encrypt();return false;'>
+      
+
+      <h2>Calculate</h2>
+
+      (Please don't use p, q over four digits and no e over '3' due to JavaScript limitations)<br/>
+      E:<br/>
+      <input name="e" type="text" value="3" size=20><br/>
+      P:<br/>
+      <input name="p" type="text" value="9941" size=20><br/>
+      Q:<br/>
+      <input name="q" type="text" value="7937" size=20><br/><br/>
+      <!--<input type="button" value="Calculate" onClick='set_ne_default();'>!-->
+      <input type="button" value="Calculate" onClick='set_ne();'><br/><br/>
+      N:<br/>
+      <input name="n" type="text" value="" size=20><br/>
+      Phi(N):<br/>
+      <input name="phin" type="text" value="" size=20><br/>
+      D:<br/>
+      <input name="d" type="text" value="" size=20><br/>
+
+      <h2>Encrypt</h2>
+
+      Plaintext:<br>
+      (Please no text over three characters due to JavaScript limitations)<br/>
+      <input name="plaintext" type="text" value="abc" size=20>
+      <input type="button" value="encrypt" onClick="do_encrypt();"><br/>
+
+      Ciphertext:<br/>
+      <input type="text" name="ciphertext" size=20></textarea><br/>
+      Decryption not available since JavaScript can't handle the integer size needed.<br/>
+      <!-- <input type="button" value="decrypt" onClick="do_decrypt();"><br/>
+
+      Decrypted Text:<br/>
+      <textarea name="decrypttext" rows=4 cols=70></textarea> !-->
+    </form>
+  </body>
+</html>
