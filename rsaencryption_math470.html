@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>JavaScript RSA Encryption Demo</title>
+    <title>MATH 470 Project - RSA Encryption</title>
   </head>
 
   <script language="JavaScript" type="text/javascript">
@@ -13,19 +13,6 @@
       this.p = null;
       this.q = null;
       this.phin = null;
-      this.dmp1 = null;
-      this.dmq1 = null;
-      this.coeff = null;
-    }
-
-    function RSASetPublic(N,E) {
-      if(N != null && E != null && N.length > 0 && E.length > 0) {
-        this.n = N;
-        this.e = E;
-      }
-      else{
-        alert("Invalid p, q, or e");
-      }
     }
 
     // calculates c = m^e mod n
@@ -170,7 +157,7 @@
           u = v*(1 - t) + t*(m - u);
       }
       return u;
-  }
+    }
 
     function RSAEncrypt(text) {
       var m = encode(text);
@@ -202,12 +189,8 @@
       return finalm;//.toString();
     }
 
-    // protected
     RSAKey.prototype.doPublic = RSADoPublic;
     RSAKey.prototype.doDecrypt = RSADoDecrypt;
-
-    // public
-    RSAKey.prototype.setPublic = RSASetPublic;
     RSAKey.prototype.encrypt = RSAEncrypt;
     RSAKey.prototype.decrypt = RSADecrypt;
 
@@ -236,7 +219,6 @@
 
     function do_encrypt() {
       var rsa = new RSAKey();
-      rsa.setPublic(document.rsatest.n.value, document.rsatest.e.value);
       var res = rsa.encrypt(document.rsatest.plaintext.value);
       if(res) {
         document.rsatest.ciphertext.value = res;
@@ -290,6 +272,10 @@
 
       Decrypted Text:<br/>
       <textarea name="decrypttext" rows=4 cols=70></textarea> !-->
+      <br/>
+      <br/>
+      <br/>
+      By Jennifer Percival
     </form>
   </body>
 </html>
